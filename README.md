@@ -16,6 +16,7 @@ classDiagram
   
   class Treino {
       +id: int
+      +nome: str
       +data: date
       +aluno: Aluno
       +exercicios: list[Exercicio]

@@ -1,13 +1,19 @@
-# Importando as bibliotecas necessárias
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from database import create_db_and_tables
+from routes import alunos, exercicios, treinos
 
-# Criando a instância da aplicação FastAPI
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables()
+    yield
 
-# Definindo uma rota simples
+app = FastAPI(lifespan=lifespan)
+
 @app.get("/")
-def read_root():
-    return {"message": "Hello, World!"}
+async def root():
+    return {"msg": "Bem-vindo ao FastAPI!"}
 
-# Para rodar a aplicação:
-# No terminal, execute: uvicorn nome_do_arquivo:app --reload
+app.include_router(alunos.router)
+app.include_router(exercicios.router)
+app.include_router(treinos.router)
