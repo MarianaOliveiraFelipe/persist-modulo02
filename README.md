@@ -2,38 +2,31 @@
 
 ```mermaid
 classDiagram
-  direction LR
-  
-  class Aluno {
-      +id: int
-      +nome: str
-      +email: str
-      +telefone: str
-      +peso: float
-      +altura: float
-      +treinos: list[Treino]
-  }
-  
-  class Treino {
-      +id: int
-      +nome: str
-      +data: date
-      +aluno: Aluno
-      +exercicios: list[Exercicio]
-  }
-  
-  class Exercicio {
-      +id: int
-      +nome: str
-      +grupo_muscular: str
-      +dificuldade: str
-      +series: int
-      +repeticoes: int
-      +descricao: str
-      +treino: Treino
-  }
+    direction LR
+    class Aluno {
+        id: int
+        nome: str
+        email: str
+        telefone: str
+        peso: float
+        altura: float
+    }
+    class Treino {
+        id: int
+        nome: str
+        dia_semana: str
+        aluno_id: int
+    }
+    class Exercicio {
+        id: int
+        nome: str
+        grupo_muscular: str
+        dificuldade: str
+        series: int
+        repeticoes: int
+        descricao: str
+    }
 
-  Aluno "1" --> "*" Treino
-  Treino "1" --> "*" Exercicio
-
+    Aluno "1" -- "*" Treino
+    Treino "*" -- "*" Exercicio
 ```
