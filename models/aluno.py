@@ -1,7 +1,9 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from .treino import Treino
+
 
 class AlunoBase(SQLModel):
     id: int | None = Field(default=None, primary_key=True)
@@ -11,5 +13,6 @@ class AlunoBase(SQLModel):
     peso: float
     altura: float
 
+
 class Aluno(AlunoBase, table=True):
-    treinos: list['Treino'] = Relationship(back_populates="aluno")
+    treinos: list["Treino"] = Relationship(back_populates="aluno")
