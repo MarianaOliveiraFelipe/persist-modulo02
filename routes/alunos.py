@@ -1,8 +1,13 @@
 from fastapi import APIRouter, HTTPException, Depends, Query
 from sqlmodel import Session, select
 from sqlalchemy.orm import selectinload
-from models.aluno import Aluno, AlunoBase
 from database import get_session
+from models.aluno import Aluno, AlunoBase
+from models.treino import Treino
+from models.exercicio import Exercicio
+from services.aluno_service import search_alunos_por_nome, get_treinos_by_aluno_id 
+from services.aluno_service import get_alunos_por_peso, get_alunos_por_altura 
+
 
 router = APIRouter(
     prefix="/alunos",
@@ -33,6 +38,27 @@ def read_aluno(aluno_id: int, session: Session = Depends(get_session)):
     if not aluno:
         raise HTTPException(status_code=404, detail="Aluno not found")
     return aluno
+
+#Consultas Extras -----------------------------------------------------------------------------------------
+@router.get("/busca/{nome_parcial}", response_model=list[Aluno])
+def search_alunos(nome_parcial: str, session: Session = Depends(get_session)):
+    return search_alunos_por_nome(nome_parcial, session)
+
+
+@router.get("/peso/{peso_minimo}", response_model=list[Aluno])
+def read_alunos_por_peso(peso_minimo: float, session: Session = Depends(get_session)):
+    return get_alunos_por_peso(peso_minimo, session)
+
+
+@router.get("/altura/{altura_minima}", response_model=list[Aluno])
+def read_alunos_por_altura(altura_minima: float, session: Session = Depends(get_session)):
+    return get_alunos_por_altura(altura_minima, session)
+
+
+@router.get("/{aluno_id}/treinos", response_model=list[Treino])
+def read_treinos_by_aluno_id(aluno_id: int, session: Session = Depends(get_session)):
+    return get_treinos_by_aluno_id(aluno_id, session)
+#-----------------------------------------------------------------------------------------------------------
 
 @router.put("/{aluno_id}", response_model=Aluno)
 def update_aluno(aluno_id: int, aluno: Aluno, session: Session = Depends(get_session)):
