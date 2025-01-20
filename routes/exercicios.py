@@ -18,6 +18,9 @@ router = APIRouter(
 
 @router.post("/", response_model=Exercicio)
 def create_exercicio(exercicio: Exercicio, session: Session = Depends(get_session)):
+    """
+    Cria um novo exercício.
+    """
     session.add(exercicio)
     session.commit()
     session.refresh(exercicio)
@@ -30,6 +33,9 @@ def read_exercicios(
     limit: int = Query(default=10, le=100),
     session: Session = Depends(get_session),
 ):
+    """
+    Retorna uma lista de exercícios com paginação.
+    """
     statement = (
         select(Exercicio)
         .offset(offset)
@@ -42,6 +48,9 @@ def read_exercicios(
 
 @router.get("/{exercicio_id}", response_model=Exercicio)
 def read_exercicio(exercicio_id: int, session: Session = Depends(get_session)):
+    """
+    Retorna um exercício específico pelo ID.
+    """
     statement = (
         select(Exercicio)
         .where(Exercicio.id == exercicio_id)
@@ -53,13 +62,13 @@ def read_exercicio(exercicio_id: int, session: Session = Depends(get_session)):
     return exercicio
 
 
-# Consultas Extras ---------------------------------------------------------------------------------------------
-
-
 @router.get("/dificuldade/{dificuldade}", response_model=list[Exercicio])
 def read_exercicios_por_dificuldade(
     dificuldade: str, session: Session = Depends(get_session)
 ):
+    """
+    Retorna exercícios por dificuldade.
+    """
     return get_exercicios_por_dificuldade(session, dificuldade)
 
 
@@ -67,6 +76,9 @@ def read_exercicios_por_dificuldade(
 def read_exercicios_por_grupo(
     grupo_muscular: str, session: Session = Depends(get_session)
 ):
+    """
+    Retorna exercícios por grupo muscular.
+    """
     return get_exercicios_por_grupo(session, grupo_muscular)
 
 
@@ -74,16 +86,19 @@ def read_exercicios_por_grupo(
 def read_exercicios_por_descricao(
     palavra_chave: str, session: Session = Depends(get_session)
 ):
+    """
+    Retorna exercícios por descrição (palavra-chave).
+    """
     return get_exercicios_por_descricao(session, palavra_chave)
-
-
-# -----------------------------------------------------------------------------------------------------------
 
 
 @router.put("/{exercicio_id}", response_model=Exercicio)
 def update_exercicio(
     exercicio_id: int, exercicio: Exercicio, session: Session = Depends(get_session)
 ):
+    """
+    Atualiza os dados de um exercício pelo ID.
+    """
     db_exercicio = session.get(Exercicio, exercicio_id)
     if not db_exercicio:
         raise HTTPException(status_code=404, detail="Exercício not found")
@@ -97,6 +112,9 @@ def update_exercicio(
 
 @router.delete("/{exercicio_id}")
 def delete_exercicio(exercicio_id: int, session: Session = Depends(get_session)):
+    """
+    Deleta um exercício pelo ID.
+    """
     exercicio = session.get(Exercicio, exercicio_id)
     if not exercicio:
         raise HTTPException(status_code=404, detail="Exercício not found")

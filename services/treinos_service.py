@@ -5,8 +5,16 @@ from models.treino import Treino
 from fastapi import HTTPException
 
 
-# Função para contagem de treinos por aluno
 def count_treinos_por_aluno(session: Session):
+    """
+    Conta o número de treinos associados a cada aluno.
+
+    Args:
+        session (Session): Sessão do banco de dados.
+
+    Returns:
+        list[dict]: Lista de dicionários com o nome do aluno e a quantidade de treinos.
+    """
     try:
         statement = (
             select(Aluno.nome, func.count(Treino.id).label("treino_count"))
@@ -26,8 +34,17 @@ def count_treinos_por_aluno(session: Session):
         )
 
 
-# Função para obter treinos por dia da semana
 def get_treinos_por_dia(session: Session, dia_semana: str):
+    """
+    Obtém a lista de treinos para um dia específico da semana.
+
+    Args:
+        session (Session): Sessão do banco de dados.
+        dia_semana (str): Dia da semana para o filtro (ex.: 'Segunda', 'Terça').
+
+    Returns:
+        list[Treino]: Lista de treinos correspondentes ao dia da semana especificado.
+    """
     try:
         statement = (
             select(Treino)
@@ -49,8 +66,16 @@ def get_treinos_por_dia(session: Session, dia_semana: str):
         )
 
 
-# Função para contagem de treinos por dia da semana
 def count_treinos_por_dia(session: Session) -> list[tuple]:
+    """
+    Conta o número de treinos para cada dia da semana.
+
+    Args:
+        session (Session): Sessão do banco de dados.
+
+    Returns:
+        list[tuple]: Lista de tuplas contendo o dia da semana e a quantidade de treinos.
+    """
     try:
         statement = select(
             Treino.dia_semana, func.count(Treino.id).label("quantidade")
