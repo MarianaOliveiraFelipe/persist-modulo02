@@ -37,11 +37,7 @@ def get_alunos_por_peso(peso_minimo: float, session: Session):
     Returns:
         list[Aluno]: Lista de alunos que atendem ao critério de peso.
     """
-    statement = (
-        select(Aluno)
-        .where(Aluno.peso > peso_minimo)
-        .options(selectinload(Aluno.treinos))
-    )
+    statement = select(Aluno).where(Aluno.peso > peso_minimo)
     alunos = session.exec(statement).all()
 
     if not alunos:
@@ -64,11 +60,7 @@ def get_alunos_por_altura(altura_minima: float, session: Session):
     Returns:
         list[Aluno]: Lista de alunos que atendem ao critério de altura.
     """
-    statement = (
-        select(Aluno)
-        .where(Aluno.altura > altura_minima)
-        .options(selectinload(Aluno.treinos))
-    )
+    statement = select(Aluno).where(Aluno.altura > altura_minima)
     alunos = session.exec(statement).all()
 
     if not alunos:
@@ -78,6 +70,7 @@ def get_alunos_por_altura(altura_minima: float, session: Session):
         )
 
     return alunos
+
 
 
 def get_treinos_by_aluno_id(aluno_id: int, session: Session):
